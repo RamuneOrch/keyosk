@@ -10,7 +10,7 @@ public class Menu {
         this.count = count;
     }
 
-    public void incCount(){
+    public void increase(){
         this.count++;
     }
 
@@ -23,6 +23,10 @@ public class Menu {
     }
 
     public int getPrice() {
+        return price;
+    }
+
+    public int getTotalPrice(){
         return price*count;
     }
 

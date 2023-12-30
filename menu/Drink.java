@@ -2,29 +2,19 @@ package sparta.java_project.keyosk.menu;
 import sparta.java_project.keyosk.Menu;
 
 public class Drink extends Menu {
-    // 이름 , 상세설명
-    String name, detail;
     // 옵션 : 탄산의 유무
     boolean carbonic;
-
-    int price;
-    public Drink(String name, int price, String detail, boolean carbonic){
-        super(name, price, detail, 0);
-        this.name = name;
-        this.price = price;
-        this.detail = detail;
+    public Drink(String name, int price, String detail, int count, boolean carbonic){
+        super(name, price, detail, count);
         this.carbonic = carbonic;
     }
 
-    public String getDetail() {
-        return detail;
+    @Override
+    public String toString() {
+        return "Drink";
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public String getName() {
-        return name;
+    public boolean isCarbonic() {
+        return carbonic;
     }
 }

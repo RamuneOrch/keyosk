@@ -1,7 +1,7 @@
-package sparta.java_project.keyosk;
+package sparta.java_project.keyosk.menuMessage;
 
 public class MenuMessage extends MainMessage {
-    MenuMessage(){
+    public MenuMessage(){
         super();
         System.out.println("[ Songs Cafe ]");
         System.out.println("1. Coffee   | 커피");

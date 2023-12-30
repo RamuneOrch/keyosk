@@ -9,7 +9,7 @@ public class Drink extends Menu {
 
     int price;
     public Drink(String name, int price, String detail, boolean carbonic){
-        super(name, price, detail);
+        super(name, price, detail, 0);
         this.name = name;
         this.price = price;
         this.detail = detail;

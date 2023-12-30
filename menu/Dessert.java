@@ -8,7 +8,7 @@ public class Dessert extends Menu {
     int pork;
     int price;
     public Dessert(String name, int price, String detail, int pork){
-        super(name, price, detail);
+        super(name, price, detail,0);
         this.name = name;
         this.price = price;
         this.detail = detail;

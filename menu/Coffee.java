@@ -17,7 +17,7 @@ public class Coffee extends Menu {
     int price;
 
     public Coffee(String name, int price, String detail, boolean syrup){
-        super(name, price, detail);
+        super(name, price, detail,0);
         this.price = price;
         this.name = name;
         this.detail = detail;

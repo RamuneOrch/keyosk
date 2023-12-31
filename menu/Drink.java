@@ -14,6 +14,10 @@ public class Drink extends Menu {
         return "Drink";
     }
 
+    public void setCarbonic(boolean carbonic) {
+        this.carbonic = carbonic;
+    }
+
     public boolean isCarbonic() {
         return carbonic;
     }

@@ -10,6 +10,10 @@ public class Dessert extends Menu {
         this.pork = pork;
     }
 
+    public void setPork(int pork) {
+        this.pork = pork;
+    }
+
     @Override
     public String toString() {
         return "Dessert";

@@ -38,6 +38,12 @@ public class Main {
         dessertList.add(new Dessert("마카롱", 3500, "마카롱임", 1, 1));
         dessertList.add(new Dessert("버터와플", 8500, "버터랑 와플", 1, 1));
 
+        // 전체 메뉴를 담아서 하나 각자 하나씩 뽑아가게 만들기
+        // ? wildcard를 사용함으로써 Menu의 자식들만 들어갈 수 있게 만들기
+        ArrayList<ArrayList<? extends Menu>> allMenu = new ArrayList<>();
+        allMenu.add(coffList);
+        allMenu.add(drinkList);
+        allMenu.add(dessertList);
         // 장바구니
         ArrayList<Menu> bascket = new ArrayList<>();
         // 전체 상품 판매 갯수
@@ -57,47 +63,17 @@ public class Main {
             int total = 0;
             switch (menuCheck) {
                 case "1":
+                    // 상세 메뉴판을 출력해주는 코드
                     new MainMessage();
+                    // 이 부분도 stream으로 출력이 가능할까? stream 람다를 써가지고 구현하면 괜찮을거같은데
                     for (int i = 0; i < coffList.size(); i++) {
                         System.out.println(i + 1 + ". " + coffList.get(i).getName() + " | 가격 : " + coffList.get(i).getPrice() + " | " + coffList.get(i).getDetail());
                     }
                     String menuDetailCheck1 = sc.nextLine();
                     // 각 번호가 입력될 때 마다 그 항목에 대한 옵션 선택 UI가 나온다.
                     System.out.println("----------------------------");
-                    for (Coffee a : coffList) {
-                        if (coffList.get(Integer.parseInt(menuDetailCheck1) - 1) == a) {
-                            System.out.println(a.getName() + "  |   가격 : " + a.getPrice() + "   |   " + a.getDetail());
-                            System.out.println();
-                            System.out.println("시럽이 필요하십니까?");
-                            System.out.println("1. 예            2. 아니오");
-                            // 왜 여기서 syrup이 바뀌지 않을까요? A.너가 -1을안써서 배열이 밀렷음
-                            String optionCheck1 = sc.nextLine();
-                            if (optionCheck1.equals("1")) {
-                                a.setSyrup(true);
-                            }
-                            break;
-                        }
-                    }
-                    if (!menuDetailCheck1.isEmpty()) {
-                        // 2. 장바구니가 버어 있는지 체크 or 똑같은 주소를 가진 객체가 들어있는지 체크한다.
-                        // 2-1 장바구니가 비어있거나 같은 클래스 객체가 없으면 그대로 장바구니에 넣는다.
-                        // stream nonematch : 인자값의 식에 match되는 값이 없으면 true를 내뱉는다.
-                        if (bascket.isEmpty() || bascket.stream().noneMatch(e -> e == coffList.get(Integer.parseInt(menuDetailCheck1) - 1))) {
-                            System.out.println("check");
-                            bascket.add(coffList.get(Integer.parseInt(menuDetailCheck1) - 1));
-                            globalBascket.add(coffList.get(Integer.parseInt(menuDetailCheck1) - 1));
-//                            System.out.println(bascket.stream().filter(e->e == coffList.get(Integer.parseInt(menuDetailCheck1) - 1)));;
-                        }
-                        // 2-2 장바구니가 비어있지 않을 때
-                        // 2-2-1 같은 값이면 count만 ++ 해준다.
-                        else if (bascket.stream().anyMatch(e -> e == coffList.get(Integer.parseInt(menuDetailCheck1) - 1))) {
-                            for (Menu a : bascket) {
-                                if (a == coffList.get(Integer.parseInt(menuDetailCheck1) - 1)) {
-                                    a.increase();
-                                }
-                            }
-                        }
-                    }
+                    // 중첩되는 코드 구문을 함수로 바꾸기
+                    menuChoice(menuDetailCheck1, allMenu.get(0), bascket, globalBascket, sc);
                     break;
                 case "2":
                     new MainMessage();
@@ -106,6 +82,7 @@ public class Main {
                     }
                     String menuDetailCheck2 = sc.nextLine();
                     // 번호를 입력받는다.
+                    menuChoice(menuDetailCheck2, allMenu.get(1), bascket, globalBascket, sc);
                     for (Drink a : drinkList) {
                         if (drinkList.get(Integer.parseInt(menuDetailCheck2) - 1) == a) {
                             System.out.println(a.getName() + "  |   가격 : " + a.getPrice() + "   |   " + a.getDetail());
@@ -274,6 +251,42 @@ public class Main {
                 default:
                     System.out.println("여기는 분명 실행이 안되어야 되는데");
                     break;
+            }
+        }
+    }
+    private static void menuChoice(String menuDetailCheck1, ArrayList<? extends Menu> allMenu, ArrayList<Menu> bascket, ArrayList<Menu> globalBascket, Scanner sc){
+        for (Menu a : allMenu) {
+            if (allMenu.get(Integer.parseInt(menuDetailCheck1) - 1) == a) {
+                System.out.println(a.getName() + "  |   가격 : " + a.getPrice() + "   |   " + a.getDetail());
+                System.out.println();
+                System.out.println("시럽이 필요하십니까?");
+                System.out.println("1. 예            2. 아니오");
+                // 왜 여기서 syrup이 바뀌지 않을까요? A.너가 -1을안써서 배열이 밀렷음
+                String optionCheck1 = sc.nextLine();
+                if (optionCheck1.equals("1")) {
+                    ((Coffee)a).setSyrup(true);
+                }
+                break;
+            }
+        }
+        if (!menuDetailCheck1.isEmpty()) {
+            // 2. 장바구니가 버어 있는지 체크 or 똑같은 주소를 가진 객체가 들어있는지 체크한다.
+            // 2-1 장바구니가 비어있거나 같은 클래스 객체가 없으면 그대로 장바구니에 넣는다.
+            // stream nonematch : 인자값의 식에 match되는 값이 없으면 true를 내뱉는다.
+            if (bascket.isEmpty() || bascket.stream().noneMatch(e -> e == allMenu.get(Integer.parseInt(menuDetailCheck1) - 1))) {
+                System.out.println("check");
+                bascket.add(allMenu.get(Integer.parseInt(menuDetailCheck1) - 1));
+                globalBascket.add(allMenu.get(Integer.parseInt(menuDetailCheck1) - 1));
+//                            System.out.println(bascket.stream().filter(e->e == allMenu.get(Integer.parseInt(menuDetailCheck1) - 1)));;
+            }
+            // 2-2 장바구니가 비어있지 않을 때
+            // 2-2-1 같은 값이면 count만 ++ 해준다.
+            else if (bascket.stream().anyMatch(e -> e == allMenu.get(Integer.parseInt(menuDetailCheck1) - 1))) {
+                for (Menu a : bascket) {
+                    if (a == allMenu.get(Integer.parseInt(menuDetailCheck1) - 1)) {
+                        a.increase();
+                    }
+                }
             }
         }
     }
